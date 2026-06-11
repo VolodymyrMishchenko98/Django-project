@@ -6,33 +6,27 @@ from .forms import MovieForm, CommentForm
 
 
 def home(request):
-    """Головна сторінка сайту"""
     top_movies = Movie.objects.all().order_by('-rating', '-year')[:4]
     return render(request, 'home.html', {'top_movies': top_movies})
 
 
 def author(request):
-    """Сторінка про автора"""
     return render(request, 'author.html')
 
 
 def movie_list(request):
-    """Сторінка зі списком фільмів з фільтрацією, пошуком та сортуванням"""
     movies = Movie.objects.all().distinct()
     genres = Movie.objects.values_list('genre', flat=True).distinct()
     search_query = request.GET.get('search', '').strip()
     genre_filter = request.GET.get('genre', '').strip()
     sort_option = request.GET.get('sort', '').strip()
     
-    # Пошук за назвою (case-insensitive, partial match)
     if search_query:
         movies = movies.filter(Q(title__icontains=search_query) | Q(description__icontains=search_query))
     
-    # Фільтр за жанром
     if genre_filter:
         movies = movies.filter(genre=genre_filter)
     
-    # Сортування
     if sort_option == 'year_asc':
         movies = movies.order_by('year')
     elif sort_option == 'year_desc':
@@ -50,13 +44,11 @@ def movie_list(request):
 
 
 def movie_detail(request, pk):
-    """Детальна інформація про фільм"""
     movie = get_object_or_404(Movie, pk=pk)
-    # Збільшити лічильник переглядів
-    if request.method == 'GET': # Increment views only on GET requests
+    if request.method == 'GET':
         movie.increment_views()
 
-    comments = movie.comments.all() # Получаем все комментарии к фильму
+    comments = movie.comments.all()
 
     if request.method == 'POST':
         comment_form = CommentForm(request.POST)
@@ -72,7 +64,6 @@ def movie_detail(request, pk):
 
 
 def movie_add(request):
-    """Додавання нового фільму"""
     if request.method == 'POST':
         form = MovieForm(request.POST, request.FILES)
         if form.is_valid():
@@ -85,7 +76,6 @@ def movie_add(request):
 
 
 def movie_edit(request, pk):
-    """Редагування фільму"""
     movie = get_object_or_404(Movie, pk=pk)
     if request.method == 'POST':
         form = MovieForm(request.POST, request.FILES, instance=movie)
@@ -99,7 +89,6 @@ def movie_edit(request, pk):
 
 
 def movie_delete(request, pk):
-    """Видалення фільму"""
     movie = get_object_or_404(Movie, pk=pk)
     if request.method == 'POST':
         movie.delete()
@@ -108,6 +97,5 @@ def movie_delete(request, pk):
     return render(request, 'movie_confirm_delete.html', {'movie': movie})
 
 def movies_top(request):
-    """Топ фільмів"""
     movies = Movie.objects.all().order_by('-rating', '-year')[:10]
     return render(request, 'movies_top.html', {'movies': movies})

@@ -1,17 +1,10 @@
-/* ============================================
-   MOVIE ARCHIVE - Premium Cinematic Design
-   Inspired by Netflix, IMDb & Letterboxd
-   ============================================ */
 
-/* CSS Custom Properties - Design System */
 :root {
-  /* Primary Colors */
   --primary: #e50914;
   --primary-dark: #b20710;
   --primary-light: #ff0a16;
   --primary-glow: rgba(229, 9, 20, 0.4);
 
-  /* Neutral Colors */
   --bg-deepest: #0a0a0a;
   --bg-deep: #0f0f0f;
   --bg-dark: #141414;
@@ -20,13 +13,11 @@
   --bg-elevated: #242424;
   --bg-hover: #2a2a2a;
 
-  /* Text Colors */
   --text-primary: #ffffff;
   --text-secondary: #b3b3b3;
   --text-tertiary: #808080;
   --text-muted: #595959;
 
-  /* Accent Colors */
   --accent-gold: #f5c518;
   --accent-gold-glow: rgba(245, 197, 24, 0.3);
   --accent-blue: #0078ff;
@@ -37,7 +28,6 @@
   --error-glow: rgba(239, 68, 68, 0.3);
   --warning: #f59e0b;
 
-  /* Borders & Shadows */
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-medium: rgba(255, 255, 255, 0.12);
   --border-strong: rgba(255, 255, 255, 0.2);
@@ -47,13 +37,11 @@
   --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
   --shadow-glow-primary: 0 0 20px var(--primary-glow);
 
-  /* Typography */
   --font-primary:
     "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-display: "Playfair Display", Georgia, serif;
   --font-mono: "SF Mono", "Fira Code", monospace;
 
-  /* Font Sizes */
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
@@ -65,7 +53,6 @@
   --text-5xl: 3rem;
   --text-6xl: 3.75rem;
 
-  /* Spacing */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -79,7 +66,6 @@
   --space-20: 5rem;
   --space-24: 6rem;
 
-  /* Layout */
   --header-height: 72px;
   --container-max: 1400px;
   --container-narrow: 800px;
@@ -90,13 +76,11 @@
   --border-radius-2xl: 24px;
   --border-radius-full: 9999px;
 
-  /* Transitions */
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
   --transition-slow: 350ms ease;
   --transition-slower: 500ms ease;
 
-  /* Z-Index Scale */
   --z-dropdown: 100;
   --z-sticky: 200;
   --z-fixed: 300;
@@ -106,9 +90,8 @@
   --z-tooltip: 700;
 }
 
-/* ============================================
-   RESET & BASE STYLES
-   ============================================ */
+
+
 
 *,
 *::before,
@@ -134,7 +117,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Subtle background pattern */
+
 body::before {
   content: "";
   position: fixed;
@@ -162,7 +145,7 @@ body::before {
   z-index: -1;
 }
 
-/* Typography */
+
 h1,
 h2,
 h3,
@@ -214,19 +197,19 @@ img {
   display: block;
 }
 
-/* Focus Styles */
+
 :focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
-/* Selection */
+
 ::selection {
   background: var(--primary);
   color: var(--text-primary);
 }
 
-/* Scrollbar */
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -248,6 +231,12 @@ img {
 /* ============================================
    LAYOUT
    ============================================ */
+
+/* ============================================
+   HEADER / NAVIGATION
+   ============================================ */
+
+
 
 .container {
   width: 100%;
@@ -299,7 +288,7 @@ img {
   gap: var(--space-8);
 }
 
-/* Logo */
+
 .logo {
   display: flex;
   align-items: center;
@@ -333,11 +322,11 @@ img {
   font-size: var(--text-lg);
 }
 
-/* Navigation */
+
 .nav {
   display: flex;
   align-items: center;
-  position: relative; /* Контейнер для динамічного індикатора */
+  position: relative; 
 }
 
 .nav-list {
@@ -347,7 +336,7 @@ img {
   gap: var(--space-1);
 }
 
-/* Динамічний індикатор (як у футері) */
+
 .nav-link-indicator {
   position: absolute;
   bottom: -4px;
@@ -387,11 +376,11 @@ img {
 }
 
 .nav-link.active::after {
-  /* Прибираємо статичну лінію, бо тепер є динамічна */
+  
   display: none;
 }
 
-/* Mobile Menu */
+
 .mobile-menu-btn {
   display: none;
   flex-direction: column;
@@ -476,7 +465,7 @@ img {
   color: var(--text-primary);
 }
 
-/* Page Transition Overlay */
+
 .page-transition-overlay {
   position: fixed;
   inset: 0;
@@ -492,7 +481,7 @@ img {
   transition: opacity 0.15s ease;
 }
 
-/* Footer Link Hover Ripple */
+
 .footer-link {
   font-size: var(--text-sm);
   color: var(--text-tertiary);
@@ -552,7 +541,7 @@ img {
   transform: scale(0.97);
 }
 
-/* Primary Button */
+
 .btn-primary {
   background: linear-gradient(
     135deg,
@@ -574,7 +563,7 @@ img {
   color: var(--text-primary);
 }
 
-/* Secondary Button */
+
 .btn-secondary {
   background: var(--bg-elevated);
   color: var(--text-primary);
@@ -588,7 +577,7 @@ img {
   transform: translateY(-1px);
 }
 
-/* Ghost Button */
+
 .btn-ghost {
   background: transparent;
   color: var(--text-secondary);
@@ -601,7 +590,7 @@ img {
   border-color: var(--border-medium);
 }
 
-/* Danger Button */
+
 .btn-danger {
   background: linear-gradient(135deg, var(--error) 0%, #dc2626 100%);
   color: var(--text-primary);
@@ -614,7 +603,7 @@ img {
   color: var(--text-primary);
 }
 
-/* Edit Button */
+
 .btn-edit {
   background: linear-gradient(135deg, var(--accent-gold) 0%, #d4a912 100%);
   color: #000;
@@ -627,7 +616,7 @@ img {
   color: #000;
 }
 
-/* Icon Button */
+
 .btn-icon {
   width: 40px;
   height: 40px;
@@ -635,7 +624,7 @@ img {
   border-radius: var(--border-radius);
 }
 
-/* Button Sizes */
+
 .btn-sm {
   padding: var(--space-2) var(--space-4);
   font-size: var(--text-xs);
@@ -646,7 +635,7 @@ img {
   font-size: var(--text-base);
 }
 
-/* Button Group */
+
 .btn-group {
   display: flex;
   gap: var(--space-3);
@@ -833,7 +822,7 @@ img {
   transform: scale(1.1);
 }
 
-/* Quick Actions Overlay */
+
 .movie-actions-overlay {
   position: absolute;
   bottom: 0;
@@ -859,7 +848,7 @@ img {
   font-size: var(--text-xs);
 }
 
-/* Movie Info */
+
 .movie-card-info {
   padding: var(--space-4);
 }
@@ -920,7 +909,7 @@ img {
   text-overflow: ellipsis;
 }
 
-/* Movie Badges */
+
 .movie-badges {
   position: absolute;
   top: var(--space-2);
@@ -986,7 +975,7 @@ img {
   letter-spacing: 0.01em;
 }
 
-/* View Counter */
+
 .movie-views {
   position: absolute;
   bottom: var(--space-2);
@@ -1010,12 +999,12 @@ img {
   opacity: 0.7;
 }
 
-/* Перемещение плашки вверх при наведении на карточку */
+
 .movie-card:hover .movie-views {
-  bottom: 58px; /* Высота достаточная, чтобы быть над кнопками overlay */
+  bottom: 58px; 
 }
 
-/* Rating on Detail Page */
+
 .detail-rating-badge {
   position: absolute;
   top: var(--space-2);
@@ -1039,7 +1028,7 @@ img {
   color: var(--accent-gold);
 }
 
-/* Status Badges on Detail Page */
+
 .detail-status-badges {
   display: flex;
   gap: var(--space-2);
@@ -1080,7 +1069,7 @@ img {
   fill: var(--text-tertiary);
 }
 
-/* Rating display in movie info */
+
 .rating-display {
   display: flex;
   align-items: center;
@@ -1092,7 +1081,7 @@ img {
   font-weight: 600;
 }
 
-/* Checkbox wrapper for watched field */
+
 .checkbox-wrapper {
   display: flex;
   align-items: center;
@@ -1105,7 +1094,7 @@ img {
   cursor: pointer;
 }
 
-/* Filters Section */
+
 .filters-section {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
@@ -1120,7 +1109,7 @@ img {
   gap: var(--space-5);
 }
 
-/* Search Bar */
+
 .search-bar {
   position: relative;
   display: flex;
@@ -1140,7 +1129,7 @@ img {
   padding-left: var(--space-10);
 }
 
-/* Filters Controls */
+
 .filters-controls {
   display: grid;
   grid-template-columns: 1fr 1fr auto;
@@ -1164,7 +1153,7 @@ img {
   padding-bottom: 2px;
 }
 
-/* Active Filters Display */
+
 .active-filters {
   display: flex;
   flex-wrap: wrap;
@@ -1222,7 +1211,7 @@ img {
   overflow: hidden;
 }
 
-/* Animated background */
+
 .hero::before {
   content: "";
   position: absolute;
@@ -1258,7 +1247,7 @@ img {
   }
 }
 
-/* Grid pattern overlay */
+
 .hero::after {
   content: "";
   position: absolute;
@@ -1352,7 +1341,7 @@ img {
   }
 }
 
-/* Features Section */
+
 .features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -1429,7 +1418,7 @@ img {
   margin-top: var(--space-2);
 }
 
-/* Back Link */
+
 .back-link {
   display: inline-flex;
   align-items: center;
@@ -1552,7 +1541,7 @@ img {
   border-radius: var(--border-radius-xl);
 }
 
-/* Gradient overlay on poster */
+
 .movie-detail-poster::after {
   content: "";
   position: absolute;
@@ -1575,7 +1564,7 @@ img {
   color: var(--text-primary);
 }
 
-/* Meta Grid */
+
 .movie-detail-meta {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1607,7 +1596,7 @@ img {
   color: var(--text-primary);
 }
 
-/* Description */
+
 .movie-detail-description {
   margin-bottom: var(--space-8);
 }
@@ -1625,14 +1614,14 @@ img {
   color: var(--text-secondary);
 }
 
-/* Date */
+
 .movie-detail-date {
   font-size: var(--text-sm);
   color: var(--text-tertiary);
   margin-bottom: var(--space-6);
 }
 
-/* Actions */
+
 .movie-detail-actions {
   display: flex;
   gap: var(--space-3);
@@ -2179,7 +2168,7 @@ img {
    ANIMATIONS & UTILITIES
    ============================================ */
 
-/* Fade in animation for page load */
+
 .fade-in {
   animation: fadeIn 0.5s ease-out;
 }
@@ -2193,7 +2182,7 @@ img {
   }
 }
 
-/* Stagger animation for grid items */
+
 .movies-grid .movie-card {
   animation: fadeInUp 0.5s ease-out both;
 }
@@ -2223,7 +2212,7 @@ img {
   animation-delay: 0.4s;
 }
 
-/* Skeleton loading */
+
 .skeleton {
   background: linear-gradient(
     90deg,
@@ -2244,7 +2233,7 @@ img {
   }
 }
 
-/* Visually hidden (accessibility) */
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -2257,7 +2246,7 @@ img {
   border: 0;
 }
 
-/* Text utilities */
+
 .text-center {
   text-align: center;
 }
@@ -2271,7 +2260,7 @@ img {
   color: var(--text-tertiary);
 }
 
-/* Spacing utilities */
+
 .mt-auto {
   margin-top: auto;
 }
@@ -2284,3 +2273,4 @@ img {
 .mb-8 {
   margin-bottom: var(--space-8);
 }
+

@@ -135,7 +135,6 @@
         }
       });
 
-      // Header Link Indicator
       (function () {
         const navContainer = document.querySelector(".nav");
         const navIndicator = document.querySelector(".nav-link-indicator");
@@ -148,7 +147,7 @@
           const linkRect = el.getBoundingClientRect();
           navIndicator.style.left = linkRect.left - containerRect.left + "px";
           navIndicator.style.width = linkRect.width + "px";
-          navIndicator.style.opacity = 1; // Make visible when active or hovered
+          navIndicator.style.opacity = 1;
         }
 
         navLinks.forEach((link) => {
@@ -158,7 +157,7 @@
         navContainer.addEventListener("mouseleave", () => {
           const current = document.querySelector(".nav .nav-link.active");
           if (current) moveNavIndicator(current);
-          else navIndicator.style.opacity = 0; // Hide if no active link
+          else navIndicator.style.opacity = 0;
         });
 
         const currentNavLink = document.querySelector(".nav .nav-link.active");

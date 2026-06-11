@@ -25,7 +25,6 @@ class MovieAdmin(admin.ModelAdmin):
     )
     
     def rating_display(self, obj):
-        """Форматовані зірки рейтингу"""
         if obj.rating:
             stars = '⭐' * obj.rating
             return f"{stars} ({obj.rating}/10)"
@@ -33,7 +32,6 @@ class MovieAdmin(admin.ModelAdmin):
     rating_display.short_description = 'Рейтинг'
     
     def watched_display(self, obj):
-        """Статус перегляду"""
         if obj.watched:
             return '✓ Переглянуто'
         return '✕ Не переглянуто'

@@ -27,7 +27,6 @@ class Movie(models.Model):
         return self.title
 
     def increment_views(self):
-        """Increment the view counter by 1"""
         self.views = models.F('views') + 1
         self.save(update_fields=['views'])
         self.refresh_from_db()
