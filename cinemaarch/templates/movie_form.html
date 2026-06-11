@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <!-- Back Link -->
+    <a href="{% url 'movie_list' %}" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Назад до каталогу
+    </a>
+    
+    <!-- Form Header -->
+    <h1 class="page-title">{{ title }}</h1>
+    
+    <!-- Form Container -->
+    <div class="form-container">
+        <form method="post" enctype="multipart/form-data" class="movie-form" novalidate>
+            {% csrf_token %}
+            
+            <!-- Title Field -->
+            <div class="form-group">
+                {{ form.title.label_tag }}
+                {{ form.title }}
+                {% if form.title.errors %}
+                    <div class="form-errors">{{ form.title.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <!-- Director Field -->
+            <div class="form-group">
+                {{ form.director.label_tag }}
+                {{ form.director }}
+                {% if form.director.errors %}
+                    <div class="form-errors">{{ form.director.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <!-- Genre Field -->
+            <div class="form-group">
+                {{ form.genre.label_tag }}
+                {{ form.genre }}
+                {% if form.genre.errors %}
+                    <div class="form-errors">{{ form.genre.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <!-- Year Field -->
+            <div class="form-group">
+                {{ form.year.label_tag }}
+                {{ form.year }}
+                {% if form.year.errors %}
+                    <div class="form-errors">{{ form.year.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <!-- Description Field -->
+            <div class="form-group">
+                {{ form.description.label_tag }}
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <div class="form-errors">{{ form.description.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <!-- Poster Field -->
+            <div class="form-group">
+                {{ form.poster.label_tag }}
+                {{ form.poster }}
+                {% if form.poster.errors %}
+                    <div class="form-errors">{{ form.poster.errors }}</div>
+                {% endif %}
+                <small style="color: var(--text-tertiary); font-size: var(--text-xs); margin-top: var(--space-1);">
+                    Рекомендований розмір: 500x750px. Формати: JPG, PNG, WebP.
+                </small>
+            </div>
+            
+            <!-- Rating Field -->
+            <div class="form-group">
+                {{ form.rating.label_tag }}
+                {{ form.rating }}
+                {% if form.rating.errors %}
+                    <div class="form-errors">{{ form.rating.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <!-- Watched Status -->
+            <div class="form-group">
+                <div class="checkbox-wrapper">
+                    {{ form.watched }}
+                    {{ form.watched.label_tag }}
+                </div>
+                {% if form.watched.errors %}
+                    <div class="form-errors">{{ form.watched.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17 21 17 13 7 13 7 21"/>
+                        <polyline points="7 3 7 8 15 8"/>
+                    </svg>
+                    Зберегти
+                </button>
+                <a href="{% url 'movie_list' %}" class="btn btn-secondary">
+                    Скасувати
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

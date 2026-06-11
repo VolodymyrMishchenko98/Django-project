@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}CineVault - Твій персональний кіноархів{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🎬 Новий рівень колекціонування кіно</div>
+    <h1 class="hero-title">
+      Твій власний <span class="accent">Кіноархів</span>
+    </h1>
+    <p class="hero-description">
+      Зберігай улюблені фільми, відстежуй переглянуте та знаходь найкращі
+      стрічки за рейтингом у нашому каталозі.
+    </p>
+    <div class="hero-actions">
+      <a href="{% url 'movie_list' %}" class="btn btn-primary btn-lg"
+        >Переглянути каталог</a
+      >
+      <a href="{% url 'movies_top' %}" class="btn btn-secondary btn-lg"
+        >🏆 Топ-10 фільмів</a
+      >
+    </div>
+  </div>
+</section>
+
+<section class="features-section" style="margin-top: 4rem">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">Популярні за рейтингом</h2>
+      <p class="page-subtitle">Стрічки, що отримали найвищі оцінки</p>
+    </div>
+    <a href="{% url 'movies_top' %}" class="btn btn-ghost"
+      >Весь рейтинг &rarr;</a
+    >
+  </div>
+
+  <div class="movies-grid">
+    {% for movie in top_movies %}
+    <article class="movie-card">
+      <div class="movie-poster">
+        {% if movie.poster %}
+        <img src="{{ movie.poster.url }}" alt="{{ movie.title }}" />
+        {% else %}
+        <div class="movie-poster-placeholder"><span>🎬</span></div>
+        {% endif %}
+
+        <div class="movie-badges">
+          <div class="badge badge-rating">⭐ {{ movie.rating }}</div>
+        </div>
+
+        <div class="movie-actions-overlay">
+          <a
+            href="{% url 'movie_detail' movie.pk %}"
+            class="btn btn-primary btn-sm"
+            >Детальніше</a
+          >
+        </div>
+      </div>
+      <div class="movie-card-info">
+        <h3 class="movie-card-title">
+          <a href="{% url 'movie_detail' movie.pk %}">{{ movie.title }}</a>
+        </h3>
+        <div class="movie-card-meta">
+          <span class="movie-year-badge">{{ movie.year }}</span>
+          <span class="movie-genre-badge">{{ movie.genre }}</span>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

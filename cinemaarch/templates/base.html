@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}CineVault{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container header-content">
+        <a href="{% url 'home' %}" class="logo">
+          <div class="logo-icon">🎬</div>
+          CineVault
+        </a>
+
+        <nav class="nav" id="main-nav">
+          <div class="nav-link-indicator"></div>
+          <ul class="nav-list">
+            <li>
+              <a
+                href="{% url 'home' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                >Головна</a
+              >
+            </li>
+            <li>
+              <a
+                href="{% url 'movie_list' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'movie_list' %}active{% endif %}"
+                >Каталог</a
+              >
+            </li>
+            <li>
+              <a
+                href="{% url 'movies_top' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'movies_top' %}active{% endif %}"
+                >Топ-10</a
+              >
+            </li>
+            <li>
+              <a
+                href="{% url 'author' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'author' %}active{% endif %}"
+                >Автор</a
+              >
+            </li>
+          </ul>
+        </nav>
+
+        <div class="btn-group">
+          <a href="{% url 'movie_add' %}" class="btn btn-primary btn-sm"
+            >Додати фільм</a
+          >
+        </div>
+
+        <button
+          class="mobile-menu-btn"
+          aria-label="Menu"
+          onclick="
+            document.getElementById('main-nav').classList.toggle('active')
+          "
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="container">
+        {% if messages %} {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          <span class="alert-icon"
+            >{% if message.tags == 'success' %}✅{% else %}ℹ️{% endif %}</span
+          >
+          {{ message }}
+        </div>
+        {% endfor %} {% endif %} {% block content %}{% endblock %}
+      </div>
+    </main>
+
+    <div class="page-transition-overlay" id="page-transition"></div>
+
+    <footer class="footer">
+      <div class="container footer-content">
+        <div class="footer-logo">CineVault</div>
+        <p class="footer-text">
+          Ваш персональний архів кіношедеврів та нотаток про переглянуті
+          стрічки.
+        </p>
+        <div class="footer-links">
+          <a
+            href="{% url 'home' %}"
+            class="footer-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+            >Головна</a
+          >
+          <a
+            href="{% url 'movie_list' %}"
+            class="footer-link {% if request.resolver_match.url_name == 'movie_list' %}active{% endif %}"
+            >Каталог</a
+          >
+          <a
+            href="{% url 'movies_top' %}"
+            class="footer-link {% if request.resolver_match.url_name == 'movies_top' %}active{% endif %}"
+            >Рейтинг</a
+          >
+          <a
+            href="{% url 'author' %}"
+            class="footer-link {% if request.resolver_match.url_name == 'author' %}active{% endif %}"
+            >Про автора</a
+          >
+        </div>
+        <p class="footer-text" style="margin-top: 2rem; opacity: 0.5">
+          &copy; 2025 CineVault. Всі права захищені.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      window.addEventListener("scroll", () => {
+        const header = document.querySelector(".header");
+        if (window.scrollY > 20) {
+          header.classList.add("scrolled");
+        } else {
+          header.classList.remove("scrolled");
+        }
+      });
+
+      // Header Link Indicator
+      (function () {
+        const navContainer = document.querySelector(".nav");
+        const navIndicator = document.querySelector(".nav-link-indicator");
+        const navLinks = document.querySelectorAll(".nav .nav-link");
+
+        if (!navContainer || !navIndicator || !navLinks.length) return;
+
+        function moveNavIndicator(el) {
+          const containerRect = navContainer.getBoundingClientRect();
+          const linkRect = el.getBoundingClientRect();
+          navIndicator.style.left = linkRect.left - containerRect.left + "px";
+          navIndicator.style.width = linkRect.width + "px";
+          navIndicator.style.opacity = 1; // Make visible when active or hovered
+        }
+
+        navLinks.forEach((link) => {
+          link.addEventListener("mouseenter", () => moveNavIndicator(link));
+        });
+
+        navContainer.addEventListener("mouseleave", () => {
+          const current = document.querySelector(".nav .nav-link.active");
+          if (current) moveNavIndicator(current);
+          else navIndicator.style.opacity = 0; // Hide if no active link
+        });
+
+        const currentNavLink = document.querySelector(".nav .nav-link.active");
+        if (currentNavLink) moveNavIndicator(currentNavLink);
+      })();
+
+      document.querySelectorAll(".footer-link").forEach((link) => {
+        link.addEventListener("click", function (e) {
+          const overlay = document.getElementById("page-transition");
+          overlay.classList.add("active");
+          setTimeout(() => {
+            overlay.classList.remove("active");
+          }, 500);
+        });
+      });
+    </script>
+  </body>
+</html>
