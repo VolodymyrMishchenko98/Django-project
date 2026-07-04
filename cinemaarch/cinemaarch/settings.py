@@ -14,7 +14,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'movies'
+    'cinemaarch.movies'
 ]
 
 MIDDLEWARE = [
@@ -44,7 +44,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'cinemaarch.wsgi.application'
+WSGI_APPLICATION = 'cinemaarch.cinemaarch.wsgi.application'
 
 DATABASES = {
     'default': {
