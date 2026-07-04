@@ -7,7 +7,7 @@ services:
     name: cinemaarch
     env: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn cinemaarch.wsgi:application"
+    startCommand: "gunicorn cinemaarch.cinemaarch.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.9
