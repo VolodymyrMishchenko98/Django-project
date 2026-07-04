@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+{% block title %}{{ movie.title }} ({{ movie.year }}){% endblock %}
+{% block content %}
+<div class="movie-detail-page">
+  <a href="{% url 'movie_list' %}" class="back-link">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path d="M19 12H5M12 19l-7-7 7-7" />
+    </svg>
+    Назад до каталогу
+  </a>
+
+  <div class="movie-detail">
+    <div class="movie-detail-poster">
+      {% if movie.poster %}
+      <img src="{{ movie.poster.url }}" alt="Постер фільму {{ movie.title }}" />
+      {% else %}
+      <div class="movie-detail-poster-placeholder">
+        <span>🎬</span>
+      </div>
+      {% endif %}
+      <div class="detail-rating-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <polygon
+            points="12 2 15.09 10.26 23.77 10.26 17.39 16.52 20.48 24.78 12 18.52 3.52 24.78 6.61 16.52 0.23 10.26 8.91 10.26"
+          />
+        </svg>
+        <span class="rating-text">{{ movie.rating|default:"—" }}/10</span>
+      </div>
+    </div>
+
+    <div class="movie-detail-info">
+      <h1 class="movie-detail-title">{{ movie.title }}</h1>
+      <p class="movie-detail-date">{{ movie.year }}</p>
+
+      <div class="detail-status-badges">
+        {% if movie.watched %}
+        <div class="status-badge watched-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+          Переглянуто
+        </div>
+        {% else %}
+        <div class="status-badge unwatched-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Не переглянуто
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="movie-detail-meta">
+        <div class="meta-item">
+          <span class="meta-label">Жанр</span>
+          <span class="meta-value">{{ movie.genre }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Режисер</span>
+          <span class="meta-value">{{ movie.director }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Перегляди</span>
+          <span class="meta-value">{{ movie.views }}</span>
+        </div>
+      </div>
+
+      <div class="movie-detail-description">
+        <h3>Опис</h3>
+        <p>{{ movie.description }}</p>
+      </div>
+
+      <div class="movie-detail-actions">
+        <a href="{% url 'movie_edit' movie.pk %}" class="btn btn-edit btn-lg">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"
+            />
+          </svg>
+          Редагувати
+        </a>
+        <a
+          href="{% url 'movie_delete' movie.pk %}"
+          class="btn btn-danger btn-lg"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+            />
+          </svg>
+          Видалити
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="comments-section"
+    style="
+      margin-top: 4rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--border-radius-xl);
+      padding: var(--space-8);
+    "
+  >
+    <h2
+      style="
+        font-size: var(--text-2xl);
+        margin-bottom: var(--space-6);
+        color: var(--text-primary);
+      "
+    >
+      Коментарі ({{ comments.count }})
+    </h2>
+
+    <div class="comment-form-container" style="margin-bottom: var(--space-8)">
+      <h3
+        style="
+          font-size: var(--text-xl);
+          margin-bottom: var(--space-4);
+          color: var(--text-primary);
+        "
+      >
+        Додати коментар
+      </h3>
+      <form method="post" class="movie-form">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="{{ comment_form.text.id_for_label }}">Ваш коментар</label>
+          {{ comment_form.text }}
+          {% if comment_form.text.errors %}
+          <div class="form-errors">{{ comment_form.text.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+            Відправити коментар
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="comments-list">
+      {% if comments %} {% for comment in comments %}
+      <div
+        class="comment-item"
+        style="
+          background: var(--bg-deep);
+          border: 1px solid var(--border-subtle);
+          border-radius: var(--border-radius);
+          padding: var(--space-5);
+          margin-bottom: var(--space-4);
+        "
+      >
+          <div
+            class="comment-header"
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: var(--space-2);
+            "
+          >
+            <div style="display: flex; align-items: center; gap: var(--space-3);">
+              <span
+                class="comment-author"
+                style="font-weight: 700; color: var(--text-primary)"
+              >{{ comment.author.username }}</span>
+              <span class="comment-date" style="font-size: var(--text-sm); color: var(--text-tertiary)">
+                {{ comment.created_at|date:"d M Y H:i" }}
+              </span>
+            </div>
+            {% if user == comment.author %}
+            <form method="post" action="{% url 'delete_comment' movie.pk comment.pk %}" style="display:inline;">{% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-danger" style="padding: 4px 8px; font-size: var(--text-xs);">Видалити</button>
+            </form>
+            {% endif %}
+          </div>
+        <p
+          class="comment-text"
+          style="color: var(--text-secondary); line-height: 1.6"
+        >
+          {{ comment.text }}
+        </p>
+      </div>
+      {% endfor %} {% else %}
+      <div
+        class="empty-state"
+        style="
+          padding: var(--space-8);
+          border: none;
+          background: var(--bg-deep);
+        "
+      >
+        <div class="empty-state-icon">💬</div>
+        <h3 class="empty-state-title">Поки що немає коментарів</h3>
+        <p class="empty-state-text">
+          Будьте першим, хто залишить коментар до цього фільму!
+        </p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+{% block title %}Фільми{% endblock %}
+{% block content %}
+<div class="movies-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Каталог фільмів</h1>
+      <p class="page-subtitle">
+        {% if total_found > 0 %}
+          Знайдено {{ total_found }}
+          {% if total_found == 1 %}
+            фільм
+          {% elif total_found >= 2 and total_found <= 4 %}
+            фільми
+          {% else %}
+            фільмів
+          {% endif %}
+        {% elif search_query or genre_filter %}
+          Нічого не знайдено
+        {% else %}
+          Додати перший фільм до колекції
+        {% endif %}
+      </p>
+    </div>
+    {% if user.is_authenticated %}
+    <a href="{% url 'movie_add' %}" class="btn btn-primary btn-lg">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14" />
+      </svg>
+      Додати фільм
+    </a>
+    {% endif %}
+  </div>
+
+  <div class="filters-section">
+    <form method="get" action="{% url 'movie_list' %}" class="filters-form">
+      <div class="search-bar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+        <input
+          type="text"
+          name="search"
+          class="search-input"
+          placeholder="Пошук за назвою фільму..."
+          value="{{ search_query }}"
+        />
+      </div>
+
+      <div class="filters-controls">
+        <div class="filter-group">
+          <label for="genre-select" class="filter-label">Жанр</label>
+          <select name="genre" id="genre-select" class="filter-select">
+            <option value="">Всі жанри</option>
+            {% for genre in genres %}
+            <option
+              value="{{ genre }}"
+              {% if genre == genre_filter %}selected{% endif %}
+            >
+              {{ genre }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="sort-select" class="filter-label">Сортування</label>
+          <select name="sort" id="sort-select" class="filter-select">
+            <option value="">За замовчуванням</option>
+            <option
+              value="year_asc"
+              {% if sort_option == 'year_asc' %}selected{% endif %}
+            >
+              Рік: від старіших до новіших
+            </option>
+            <option
+              value="year_desc"
+              {% if sort_option == 'year_desc' %}selected{% endif %}
+            >
+              Рік: від новіших до старіших
+            </option>
+          </select>
+        </div>
+
+        <div class="filter-group filter-submit">
+          <button type="submit" class="btn btn-filter">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="22 3 2 3 10 12.46 14 12.46 10 19 14 21 14 12.46 22 3" />
+            </svg>
+            Застосувати
+          </button>
+        </div>
+      </div>
+
+      {% if search_query or genre_filter or sort_option %}
+      <div class="active-filters">
+        {% if search_query %}
+        <div class="filter-chip">
+          Пошук: "{{ search_query }}"
+          {% if genre_filter %}
+          <a
+            href="{% url 'movie_list' %}?genre={{ genre_filter|urlencode }}{% if sort_option %}&sort={{ sort_option|urlencode }}{% endif %}"
+            class="chip-close"
+            >×</a
+          >
+          {% elif sort_option %}
+          <a
+            href="{% url 'movie_list' %}?sort={{ sort_option|urlencode }}"
+            class="chip-close"
+            >×</a
+          >
+          {% else %}
+          <a href="{% url 'movie_list' %}" class="chip-close">×</a>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        {% if genre_filter %}
+        <div class="filter-chip">
+          Жанр: "{{ genre_filter }}"
+          {% if search_query %}
+          <a
+            href="{% url 'movie_list' %}?search={{ search_query|urlencode }}{% if sort_option %}&sort={{ sort_option|urlencode }}{% endif %}"
+            class="chip-close"
+            >×</a
+          >
+          {% elif sort_option %}
+          <a
+            href="{% url 'movie_list' %}?sort={{ sort_option|urlencode }}"
+            class="chip-close"
+            >×</a
+          >
+          {% else %}
+          <a href="{% url 'movie_list' %}" class="chip-close">×</a>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        {% if sort_option %}
+        <div class="filter-chip">
+          Сортування:
+          {% if sort_option == 'year_asc' %}
+            Старіші спочатку
+          {% else %}
+            Новіші спочатку
+          {% endif %}
+          {% if search_query and genre_filter %}
+          <a
+            href="{% url 'movie_list' %}?search={{ search_query|urlencode }}&genre={{ genre_filter|urlencode }}"
+            class="chip-close"
+            >×</a
+          >
+          {% elif search_query %}
+          <a
+            href="{% url 'movie_list' %}?search={{ search_query|urlencode }}"
+            class="chip-close"
+            >×</a
+          >
+          {% elif genre_filter %}
+          <a
+            href="{% url 'movie_list' %}?genre={{ genre_filter|urlencode }}"
+            class="chip-close"
+            >×</a
+          >
+          {% else %}
+          <a href="{% url 'movie_list' %}" class="chip-close">×</a>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        <a href="{% url 'movie_list' %}" class="clear-filters">Очистити все</a>
+      </div>
+      {% endif %}
+    </form>
+  </div>
+
+  {% if movies %}
+  <div class="movies-grid">
+    {% for movie in movies %}
+    <article class="movie-card">
+      <div class="movie-poster">
+        {% if movie.poster %}
+        <img
+          src="{{ movie.poster.url }}"
+          alt="Постер фільму {{ movie.title }}"
+        />
+        {% else %}
+        <div class="movie-poster-placeholder">
+          <span>🎬</span>
+        </div>
+        {% endif %}
+
+        <div class="movie-badges">
+          <div class="badge badge-rating">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 10.26 23.77 10.26 17.39 16.52 20.48 24.78 12 18.52 3.52 24.78 6.61 16.52 0.23 10.26 8.91 10.26"
+              />
+            </svg>
+            {% if movie.rating is not None %}
+              {{ movie.rating }}/10
+            {% else %}
+              —/10
+            {% endif %}
+          </div>
+
+          {% if movie.watched %}
+          <div class="badge badge-watched">✓ Переглянуто</div>
+          {% else %}
+          <div class="badge badge-unwatched">✕ Не переглянуто</div>
+          {% endif %}
+        </div>
+
+        <div class="movie-views">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          {{ movie.views }}
+        </div>
+
+        <div class="movie-actions-overlay">
+          <a
+            href="{% url 'movie_detail' movie.pk %}"
+            class="btn btn-secondary btn-sm"
+          >
+            Деталі
+          </a>
+          {% if user.is_authenticated %}
+          <a href="{% url 'movie_edit' movie.pk %}" class="btn btn-edit btn-sm">
+            Змінити
+          </a>
+          <a
+            href="{% url 'movie_delete' movie.pk %}"
+            class="btn btn-danger btn-sm"
+          >
+            Видалити
+          </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="movie-card-info">
+        <h2 class="movie-card-title">
+          <a href="{% url 'movie_detail' movie.pk %}">{{ movie.title }}</a>
+        </h2>
+
+        <div class="movie-card-meta">
+          <span class="movie-year-badge">{{ movie.year }}</span>
+          <span class="movie-genre-badge">{{ movie.genre }}</span>
+        </div>
+
+        <p class="movie-director">Режисер: {{ movie.director }}</p>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-state-icon">🎬</div>
+    <h2 class="empty-state-title">
+      {% if search_query or genre_filter %}Фільми не знайдені{% else %}Каталог порожній{% endif %}
+    </h2>
+    <p class="empty-state-text">
+      {% if search_query or genre_filter %}
+        За вашими критеріями пошуку фільмів не знайдено.
+        <a href="{% url 'movie_list' %}" style="color: var(--primary)"
+          >Очистити фільтри</a
+        >
+      {% else %}
+        У вас ще немає фільмів у колекції. Додайте перший фільм, щоб
+        почати формувати свою бібліотеку.
+      {% endif %}
+    </p>
+    <a href="{% url 'movie_add' %}" class="btn btn-primary btn-lg">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14" />
+      </svg>
+      Додати фільм
+    </a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

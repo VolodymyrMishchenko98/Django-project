@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Реєстрація — CineVault{% endblock %}
+{% block content %}
+<div class="auth-page-wrapper">
+  <div class="auth-card" style="max-width: 400px; margin: 2rem auto;">
+    <h1 class="auth-title" style="font-size: var(--text-2xl); margin-bottom: var(--space-2);">Реєстрація</h1>
+    <p class="auth-subtitle" style="margin-bottom: var(--space-6);">
+      Вже є акаунт? <a href="{% url 'login' %}">Увійти</a>
+    </p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group" style="margin-bottom: var(--space-4);">
+        <label for="{{ form.username.id_for_label }}">Логін</label>
+        {{ form.username }}
+        {% for e in form.username.errors %}<div class="form-errors">{{ e }}</div>{% endfor %}
+      </div>
+      <div class="form-group" style="margin-bottom: var(--space-4);">
+        <label for="{{ form.email.id_for_label }}">Email</label>
+        {{ form.email }}
+        {% for e in form.email.errors %}<div class="form-errors">{{ e }}</div>{% endfor %}
+      </div>
+      <div class="form-group" style="margin-bottom: var(--space-4);">
+        <label for="{{ form.password1.id_for_label }}">Пароль</label>
+        {{ form.password1 }}
+        {% for e in form.password1.errors %}<div class="form-errors">{{ e }}</div>{% endfor %}
+      </div>
+      <div class="form-group" style="margin-bottom: var(--space-4);">
+        <label for="{{ form.password2.id_for_label }}">Підтвердження пароля</label>
+        {{ form.password2 }}
+        {% for e in form.password2.errors %}<div class="form-errors">{{ e }}</div>{% endfor %}
+      </div>
+      {% if form.non_field_errors %}
+      <div class="form-errors" style="margin-bottom: var(--space-4);">{{ form.non_field_errors }}</div>
+      {% endif %}
+      <button type="submit" class="btn btn-primary" style="width: 100%;">Зареєструватися</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

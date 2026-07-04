@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Реєстрація — МійПортал</title>
+<link rel="stylesheet" href="{% static 'registr/css/auth.css' %}">
+</head>
+<body>
+<div class="auth-layout">
+  <div class="auth-left">
+    <div class="auth-left-content">
+      <div class="auth-logo">Cine<span>Vault</span></div>
+      <div class="auth-tagline">Створіть акаунт за хвилину</div>
+      <div class="auth-sub">Фільми, їх рейтинг, коментарі — все під рукою.</div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <h1 class="auth-title">Реєстрація</h1>
+      <p class="auth-subtitle">Вже є акаунт? <a href="{% url 'login' %}">Увійти</a></p>
+      <form method="post">
+        {% csrf_token %}
+        <div class="field-group">
+          <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+          {{ form.first_name }}
+          {% for e in form.first_name.errors %}<div class="field-error">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="field-group">
+          <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+          {{ form.last_name }}
+          {% for e in form.last_name.errors %}<div class="field-error">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="field-group">
+          <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+          {{ form.email }}
+          {% for e in form.email.errors %}<div class="field-error">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="field-group">
+          <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+          {{ form.username }}
+          {% for e in form.username.errors %}<div class="field-error">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="field-group">
+          <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+          {{ form.password1 }}
+          {% for e in form.password1.errors %}<div class="field-error">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="field-group">
+          <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+          {{ form.password2 }}
+          {% for e in form.password2.errors %}<div class="field-error">{{ e }}</div>{% endfor %}
+        </div>
+        {% if form.non_field_errors %}
+        <div class="field-error" style="margin-bottom:.75rem">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <button type="submit" class="btn-submit">Створити акаунт</button>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>
