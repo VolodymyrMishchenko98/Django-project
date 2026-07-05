@@ -1,1 +1,1 @@
-web: gunicorn cinemaarch.cinemaarch.wsgi:application --log-file -
+web: gunicorn cinemaarch.wsgi:application --log-file -
