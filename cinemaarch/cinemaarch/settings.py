@@ -14,7 +14,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cinemaarch.movies'
+    'movies'
 ]
 
 MIDDLEWARE = [
@@ -27,7 +27,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'cinemaarch.urls'
+ROOT_URLCONF = 'cinemaarch.cinemaarch.urls'
 
 TEMPLATES = [
     {

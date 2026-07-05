@@ -53,7 +53,7 @@ python manage.py runserver
 2. Створити PostgreSQL на Render
 3. Створити Web Service:
    - Build Command: `./build.sh`
-   - Start Command: `gunicorn cinemaarch.wsgi:application`
+   - Start Command: `gunicorn cinemaarch.cinemaarch.wsgi:application`
    - Instance Type: Free
 4. Додати змінні середовища:
    - `PYTHON_VERSION` = `3.11.9`
