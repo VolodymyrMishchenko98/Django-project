@@ -27,7 +27,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'cinemaarch.cinemaarch.urls'
+ROOT_URLCONF = 'cinemaarch.urls'
 
 TEMPLATES = [
     {
@@ -44,7 +44,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'cinemaarch.cinemaarch.wsgi.application'
+WSGI_APPLICATION = 'cinemaarch.wsgi.application'
 
 DATABASES = {
     'default': {
