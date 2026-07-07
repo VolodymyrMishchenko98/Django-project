@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}{{ profile_user.username }}{% endblock %}
+{% block content %}
+<div class="profile-page">
+  <div class="profile-header">
+    <div class="profile-avatar">
+      {% if profile_user.profile.avatar %}
+      <img src="{{ profile_user.profile.avatar.url }}" alt="Аватар {{ profile_user.username }}" />
+      {% else %}
+      <div class="profile-avatar-placeholder" style="background-color: {{ profile_user.profile.avatar_color }}">
+        <span>{{ profile_user.profile.get_initials }}</span>
+      </div>
+      {% endif %}
+    </div>
+    <div class="profile-info">
+      <h1 class="profile-name">{{ profile_user.username }}</h1>
+      <p class="profile-bio">{{ profile_user.profile.bio|default:"Біографія відсутня" }}</p>
+    </div>
+  </div>
+
+  <div class="profile-section">
+    <h2 class="profile-section-title">Список для перегляду</h2>
+    {% if watchlist %}
+    <div class="movies-grid">
+      {% for item in watchlist %}
+      <article class="movie-card">
+        <div class="movie-poster">
+          {% if item.movie.poster %}
+          <img src="{{ item.movie.poster.url }}" alt="Постер фільму {{ item.movie.title }}" />
+          {% else %}
+          <div class="movie-poster-placeholder">
+            <span>🎬</span>
+          </div>
+          {% endif %}
+          <div class="movie-badges">
+            <div class="badge badge-rating">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <polygon
+                  points="12 2 15.09 10.26 23.77 10.26 17.39 16.52 20.48 24.78 12 18.52 3.52 24.78 6.61 16.52 0.23 10.26 8.91 10.26"
+                />
+              </svg>
+              {% if item.movie.rating is not None %}
+                {{ item.movie.rating }}/10
+              {% else %}
+                —/10
+              {% endif %}
+            </div>
+            {% if item.movie.watched %}
+            <div class="badge badge-watched">✓ Переглянуто</div>
+            {% else %}
+            <div class="badge badge-unwatched">✕ Не переглянуто</div>
+            {% endif %}
+          </div>
+          <div class="movie-views">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            {{ item.movie.views }}
+          </div>
+          <div class="movie-actions-overlay">
+            <a href="{% url 'movie_detail' item.movie.pk %}" class="btn btn-secondary btn-sm">
+              Деталі
+            </a>
+            {% if user.is_authenticated and user == profile_user %}
+            <a href="{% url 'toggle_watchlist' item.movie.pk %}" class="btn btn-watchlist-added btn-sm">
+              Прибрати зі списку
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="movie-card-info">
+          <h2 class="movie-card-title">
+            <a href="{% url 'movie_detail' item.movie.pk %}">{{ item.movie.title }}</a>
+          </h2>
+          <div class="movie-card-meta">
+            <span class="movie-year-badge">{{ item.movie.year }}</span>
+            <span class="movie-genre-badge">{{ item.movie.genre }}</span>
+          </div>
+          <p class="movie-director">Режисер: {{ item.movie.director }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-state-icon">📋</div>
+      <h3 class="empty-state-title">Список порожній</h3>
+      <p class="empty-state-text">
+        {% if user.is_authenticated and user == profile_user %}
+        Ви ще не додали фільми до списку для перегляду.
+        {% else %}
+        Цей користувач ще не додав фільми до списку для перегляду.
+        {% endif %}
+      </p>
+      {% if user.is_authenticated and user == profile_user %}
+      <a href="{% url 'movie_list' %}" class="btn btn-primary btn-lg">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        Перейти до каталогу
+      </a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

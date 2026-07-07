@@ -4,7 +4,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib.auth.models import User
-from .models import Profile, Movie, Comment
+from .models import Profile, Movie, Comment, Watchlist
 from .forms import MovieForm, CommentForm, RegisterForm, LoginForm
 
 
@@ -79,6 +79,12 @@ def movie_list(request):
     elif sort_option == 'year_desc':
         movies = movies.order_by('-year')
 
+    watchlist_movie_ids = set()
+    if request.user.is_authenticated:
+        watchlist_movie_ids = set(
+            Watchlist.objects.filter(user=request.user).values_list('movie_id', flat=True)
+        )
+
     context = {
         'movies': movies,
         'genres': sorted(genres),
@@ -86,6 +92,7 @@ def movie_list(request):
         'genre_filter': genre_filter,
         'sort_option': sort_option,
         'total_found': movies.count(),
+        'watchlist_movie_ids': watchlist_movie_ids,
     }
     return render(request, 'movies.html', context)
 
@@ -96,6 +103,10 @@ def movie_detail(request, pk):
         movie.increment_views()
 
     comments = movie.comments.all().select_related('author')
+
+    is_in_watchlist = False
+    if request.user.is_authenticated:
+        is_in_watchlist = Watchlist.objects.filter(user=request.user, movie=movie).exists()
 
     if request.method == 'POST':
         if not request.user.is_authenticated:
@@ -111,7 +122,7 @@ def movie_detail(request, pk):
             return redirect('movie_detail', pk=movie.pk)
     else:
         comment_form = CommentForm()
-    return render(request, 'movie_detail.html', {'movie': movie, 'comments': comments, 'comment_form': comment_form})
+    return render(request, 'movie_detail.html', {'movie': movie, 'comments': comments, 'comment_form': comment_form, 'is_in_watchlist': is_in_watchlist})
 
 
 @login_required
@@ -166,3 +177,27 @@ def delete_comment(request, movie_pk, comment_pk):
 def movies_top(request):
     movies = Movie.objects.all().order_by('-rating', '-year')[:10]
     return render(request, 'movies_top.html', {'movies': movies})
+
+
+@login_required
+def toggle_watchlist(request, movie_id):
+    movie = get_object_or_404(Movie, pk=movie_id)
+    entry = Watchlist.objects.filter(user=request.user, movie=movie)
+    if entry.exists():
+        entry.delete()
+        messages.success(request, f'«{movie.title}» прибрано зі списку для перегляду.')
+    else:
+        Watchlist.objects.create(user=request.user, movie=movie)
+        messages.success(request, f'«{movie.title}» додано до списку для перегляду.')
+    return redirect(request.META.get('HTTP_REFERER', 'movie_list'))
+
+
+def profile_view(request, username):
+    profile_user = get_object_or_404(User, username=username)
+    get_or_create_profile(profile_user)
+    watchlist = Watchlist.objects.filter(user=profile_user).select_related('movie')
+    context = {
+        'profile_user': profile_user,
+        'watchlist': watchlist,
+    }
+    return render(request, 'profile.html', context)

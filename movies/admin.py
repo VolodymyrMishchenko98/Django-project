@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Movie, Comment
+from .models import Movie, Comment, Watchlist
 
 
 @admin.register(Movie)
@@ -44,3 +44,11 @@ class CommentAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
     search_fields = ('author__username', 'text')
     ordering = ('-created_at',)
+
+
+@admin.register(Watchlist)
+class WatchlistAdmin(admin.ModelAdmin):
+    list_display = ('user', 'movie', 'added_at')
+    list_filter = ('added_at',)
+    search_fields = ('user__username', 'movie__title')
+    ordering = ('-added_at',)

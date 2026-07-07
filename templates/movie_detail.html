@@ -78,6 +78,21 @@
       </div>
 
       <div class="movie-detail-actions">
+        {% if user.is_authenticated %}
+        <a href="{% url 'toggle_watchlist' movie.pk %}" class="btn {% if is_in_watchlist %}btn-watchlist-added{% else %}btn-watchlist{% endif %} btn-lg">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+          {% if is_in_watchlist %}Прибрати зі списку{% else %}Додати в список{% endif %}
+        </a>
+        {% endif %}
         <a href="{% url 'movie_edit' movie.pk %}" class="btn btn-edit btn-lg">
           <svg
             width="16"

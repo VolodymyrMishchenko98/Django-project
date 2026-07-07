@@ -237,6 +237,12 @@
           >
             Видалити
           </a>
+          <a
+            href="{% url 'toggle_watchlist' movie.pk %}"
+            class="btn {% if movie.pk in watchlist_movie_ids %}btn-watchlist-added{% else %}btn-watchlist{% endif %} btn-sm"
+          >
+            {% if movie.pk in watchlist_movie_ids %}Прибрати{% else %}Додати{% endif %}
+          </a>
           {% endif %}
         </div>
       </div>

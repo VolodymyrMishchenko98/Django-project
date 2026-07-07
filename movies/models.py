@@ -61,3 +61,16 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Коментар від {self.author.username} до {self.movie.title}'
+
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='watchlist')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='watchlist_entries')
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'movie')
+        ordering = ['-added_at']
+
+    def __str__(self):
+        return f'{self.user.username} — {self.movie.title}'
