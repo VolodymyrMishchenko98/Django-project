@@ -56,6 +56,8 @@
         </nav>
 
         <div class="btn-group">
+          <button class="theme-toggle" id="theme-toggle" aria-label="Змінити тему">🌙</button>
+          <button class="theme-toggle" id="about-project-btn" aria-label="Про проєкт">ℹ️</button>
           {% if user.is_authenticated %}
             <a href="{% url 'profile' user.username %}" class="profile-link">{{ user.username }}</a>
             <form method="post" action="{% url 'logout' %}" style="display: inline;">{% csrf_token %}
@@ -180,6 +182,86 @@
           }, 500);
         });
       });
+
+      const themeToggle = document.getElementById("theme-toggle");
+      const root = document.documentElement;
+      const savedTheme = localStorage.getItem("theme");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: light)").matches;
+
+      function applyTheme(theme) {
+        if (theme === "light") {
+          root.classList.add("light");
+          document.body.classList.add("light");
+          themeToggle.textContent = "☀️";
+          themeToggle.setAttribute("aria-label", "Увімкнути темну тему");
+        } else {
+          root.classList.remove("light");
+          document.body.classList.remove("light");
+          themeToggle.textContent = "🌙";
+          themeToggle.setAttribute("aria-label", "Увімкнути світлу тему");
+        }
+      }
+
+      applyTheme(savedTheme || (prefersDark ? "light" : "dark"));
+
+      themeToggle.addEventListener("click", () => {
+        const isLight = root.classList.toggle("light");
+        document.body.classList.toggle("light");
+        localStorage.setItem("theme", isLight ? "light" : "dark");
+        themeToggle.textContent = isLight ? "☀️" : "🌙";
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const aboutBtn = document.getElementById("about-project-btn");
+        const aboutModal = document.getElementById("about-modal");
+        const closeAboutModal = document.getElementById("close-about-modal");
+
+        if (!aboutBtn || !aboutModal) return;
+
+        aboutBtn.addEventListener("click", () => {
+          aboutModal.classList.add("active");
+          document.body.style.overflow = "hidden";
+        });
+
+        if (closeAboutModal) {
+          closeAboutModal.addEventListener("click", () => {
+            aboutModal.classList.remove("active");
+            document.body.style.overflow = "";
+          });
+        }
+
+        aboutModal.addEventListener("click", (e) => {
+          if (e.target === aboutModal) {
+            aboutModal.classList.remove("active");
+            document.body.style.overflow = "";
+          }
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && aboutModal.classList.contains("active")) {
+            aboutModal.classList.remove("active");
+            document.body.style.overflow = "";
+          }
+        });
+      });
     </script>
+
+    <div class="modal-overlay" id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-modal-title">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="about-modal-title">Про проєкт</h2>
+          <button class="modal-close" id="close-about-modal" aria-label="Закрити">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p><strong>CineVault</strong> — персональний архів фільмів на Django з реєстрацією, коментарями та підтримкою деплою на Render.</p>
+          <ul>
+            <li>Каталог фільмів з пошуком, фільтрами та сортуванням</li>
+            <li>Додавання / редагування / видалення фільмів — тільки для авторизованих</li>
+            <li>Коментарі до фільмів</li>
+            <li>Профіль користувача: <code>/profile/</code> або <code>/profile/&lt;username&gt;/</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
